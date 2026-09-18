@@ -7,7 +7,6 @@ import resumeRouter from "./routes/resumeRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Database connection
 await connectDB()
@@ -20,7 +19,13 @@ app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
 app.use('/api/ai', aiRouter)
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${PORT}`);
-    
-});
+// Local development
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, ()=>{
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// Export for Vercel serverless
+export default app;
